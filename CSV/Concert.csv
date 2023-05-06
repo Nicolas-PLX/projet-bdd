@@ -1,0 +1,26 @@
+nomConcert,date,prix,nombrePlaces,Volontaire,cause_en_soutiens
+Super Mega Concer,2023-05-15,250,10000,True,Soutien aux personnes sans-abri
+Accor Arena,2023-06-02,80,20300,False,Protection de l'environnement
+Concert3,2023-07-10,20,120,True,Soutien aux personnes sans-abri
+Concert4,2023-08-20,35,90,False,Lutte contre la faim dans le monde
+Concert5,2023-09-05,15,1500,True,Lutte contre le cancer
+Concert6,2023-10-12,40,7000,False,Soutien aux victimes de violence domestique
+Concert7,2023-11-08,25,1000,True,
+Concert8,2023-12-25,50,60,False,Santé mentale et bien-être
+Concert9,2024-01-03,30,80,True,
+Concert10,2024-02-14,20,120,False,
+Concert11,2024-03-22,35,90,True,Soutien aux artistes locaux
+Concert12,2024-04-01,15,1750,False,Droits des animaux
+Concert13,2024-05-18,40,70,True,Lutte contre le cancer
+Concert14,2024-06-07,25,1000,False,Lutte contre le cancer
+Concert15,2024-07-15,50,640,True,Accès à l'eau potable dans les pays en développement
+Concert16,2023-01-10,25,100,True,Soutien aux enfants défavorisés
+Concert17,2023-01-22,30,8000,False,
+Concert18,2023-02-05,20,1200,True,Soutien aux personnes sans-abri
+Concert19,2023-02-18,35,900,False,
+Concert20,2023-03-03,15,1500,True,Sensibilisation au recyclage
+Pour les plus riches,2023-03-15,4000,100,False,
+Concert22,2023-03-28,250,100,True,Éducation des jeunes filles
+Accor Arena,2023-04-10,500,20030,False,
+Concert24,2023-04-18,30,800,True,Soutien aux personnes âgées isolées
+Concert25,2023-04-28,200,12000,False,

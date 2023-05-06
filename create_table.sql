@@ -1,6 +1,7 @@
 CREATE TABLE Utilisateurs
 (
     id_user SERIAL PRIMARY KEY,
+    pseudo VARCHAR(30) NOT NULL,
     email varchar(30) NOT NULL,
     pwd VARCHAR(30) NOT NULL CHECK (LENGTH(pwd) >= 8 AND LENGTH(nom) <= 20),
     pays VARCHAR(30),
@@ -34,6 +35,7 @@ CREATE TABLE Amis
 CREATE TABLE Concert
 (
     id_concert SERIAL PRIMARY KEY,
+    nom VARCHAR(50) NOT NULL,
     date_concert DATE NOT NULL,
     prix FLOAT NOT NULL,
     nb_places INTEGER NOT NULL,
@@ -153,6 +155,7 @@ CREATE TABLE Playlist
 CREATE TABLE Morceau
 (
     id_morceau SERIAL PRIMARY KEY,
+    nom VARCHAR(30) NOT NULL,
     id_artiste INTEGER NOT NULL,
     duree TIME NOT NULL
     FOREIGN KEY(id_artiste) REFERENCES Artiste(id_artiste)
