@@ -77,7 +77,7 @@ HAVING COUNT(Morceau.id_morceau) >= 5
 ORDER BY nombre_de_morceaux DESC;
 
 
---Requête bonus intéressante pour le projet : les 50 morceaux les plus aimés, ainsi que l'artiste qui les a fait, ranger dans l'ordre décroissant.
+--Requête bonus intéressante pour le projet : les 50 morceaux les plus aimés, ainsi que l'artiste qui a réalisé le morceau, ranger dans l'ordre décroissant.
 
 \! echo "Requête 8 : Les 50 morceaux les plus appréciés de la plateforme :";
 
@@ -92,7 +92,17 @@ LIMIT 50;
 
 --Requête avec calcul de deux agrégats : pas encore fait 
 
-\! echo "Requête 9 :";
+\! echo "Requête 9 : Calcul du maximum des prix et des nombres de places des concert finis";
+
+SELECT
+    AVG(max_prix) AS moyenne_max_prix,
+    AVG(max_nb_participants) AS moyenne_max_nb_participants
+FROM
+    (SELECT MAX(prix) AS max_prix,MAX(nb_participant) AS max_nb_participants
+    FROM Concert_fini 
+    JOIN Archive ON Archive.id_concert = Concert_fini.id_concert
+    GROUP BY
+        id_concert) AS subquery
 
 --Requête avec une jointure externe
 
@@ -125,7 +135,7 @@ ORDER BY chemin;
 
 -- Requête avec fenêtrage
 
-\! echo "Requête 13 : Pour chaque mois de l'année 2022, les dix groupes dont les concerts ont eu le plus de succès en termes de nombres d'utilisateurs souhaitant y participer :";
+\! echo "Requête 12 : Pour chaque mois de l'année 2022, les dix groupes dont les concerts ont eu le plus de succès en termes de nombres d'utilisateurs souhaitant y participer :";
 
 --
 WITH concerts_populaires AS (
@@ -148,6 +158,8 @@ JOIN Groupe G ON Concert.id_groupe = G.id_groupe
 WHERE C.rang <= 10
 ORDER BY C.mois, C.rang;
 
+
+\! echo "Requête 13 :"
 
 
 
