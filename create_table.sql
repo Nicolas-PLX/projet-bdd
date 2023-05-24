@@ -21,7 +21,7 @@ CREATE TABLE Groupe
     nom VARCHAR(30) NOT NULL
 ) INHERITS(Utilisateurs);
 
-CREATE TABLE Amis
+CREATE TABLE Suivis
 (
     suiveur INTEGER NOT NULL,
     suivi INTEGER NOT NULL,
@@ -29,6 +29,15 @@ CREATE TABLE Amis
     FOREIGN KEY (suiveur) REFERENCES Utilisateurs(id_user),
     FOREIGN KEY (suivi) REFERENCES Utilisateurs(id_user)
 );
+CREATE TABLE Amis
+(
+    id_user INTEGER NOT NULL,
+    id_ami INTEGER NOT NULL,
+    PRIMARY KEY(id_user,id_ami),
+    FOREIGN KEY(id_user) REFERENCES Utilisateurs(id_user),
+    FOREIGN KEY(id_ami) REFERENCES Utilisateurs(id_user)
+);
+
 
 CREATE TABLE Concert
 (
@@ -38,7 +47,8 @@ CREATE TABLE Concert
     prix FLOAT NOT NULL,
     nb_places INTEGER NOT NULL,
     volontaires boolean NOT NULL,
-    cause_soutien VARCHAR(30)
+    cause_soutien VARCHAR(30),
+    enfants_admissibles BOOLEAN NOT NULL
 );
 
 CREATE TABLE Participation
@@ -71,6 +81,7 @@ CREATE TABLE Concert_fini
 (
     id_archive INTEGER NOT NULL,
     PRIMARY KEY(id_concert,id_archive)
+    -- should I add a foreign key here ?
 )INHERITS(Concert);
 
 CREATE TABLE Archive
@@ -108,7 +119,7 @@ CREATE TABLE Artiste
     id_groupe INTEGER,
     FOREIGN KEY(id_groupe) REFERENCES Groupe(id_groupe)
 );
--- CREATE TYPE type_avis AS ENUM ('Morceau', 'Artiste', 'Lieu', 'Concert');
+CREATE TYPE type_avis AS ENUM ('Morceau', 'Artiste', 'Lieu', 'Concert');
 
 CREATE TABLE Avis
 (
@@ -143,10 +154,10 @@ CREATE TABLE Playlist
     id_playlist SERIAL PRIMARY KEY,
     id_user INTEGER NOT NULL,
     nom VARCHAR(30) NOT NULL,
-    FOREIGN KEY(id_user) REFERENCES Utilisateurs(id_user),
-    CHECK(
-        SELECT COUNT(*) FROM Playlist WHERE id_user = {id_user} >=10
-    )
+    FOREIGN KEY(id_user) REFERENCES Utilisateurs(id_user)
+    -- CHECK(
+    --     SELECT COUNT(*) FROM Playlist WHERE id_user = {id_user} >=10
+    -- )
 );
 
 CREATE TABLE Morceau
@@ -154,7 +165,7 @@ CREATE TABLE Morceau
     id_morceau SERIAL PRIMARY KEY,
     nom VARCHAR(30) NOT NULL,
     id_artiste INTEGER NOT NULL,
-    duree TIME NOT NULL
+    duree TIME NOT NULL,
     FOREIGN KEY(id_artiste) REFERENCES Artiste(id_artiste)
 );
 
@@ -181,7 +192,7 @@ CREATE TABLE Relation_genre
     FOREIGN KEY(id_parent) REFERENCES Genre(id_genre),
     FOREIGN KEY(id_fils) REFERENCES Genre(id_genre)
 );
--- CREATE TYPE type_tag AS ENUM('Groupe','Concert','Lieu','Playlist') ;
+CREATE TYPE type_tag AS ENUM('Groupe','Concert','Lieu','Playlist') ;
 
 CREATE TABLE Tag
 (
@@ -192,6 +203,16 @@ CREATE TABLE Tag
 );
 
 
+CREATE TABLE Lineup
+(
+    id_concert INTEGER NOT NULL,
+    id_artiste INTEGER NOT NULL,
+    performance_index INTEGER NOT NULL,
+    PRIMARY KEY(id_concert,id_artiste),
+    FOREIGN KEY(id_concert) REFERENCES Concert(id_concert),
+    FOREIGN KEY(id_artiste) REFERENCES Artiste(id_artiste),
+    UNIQUE(id_concert, performance_index)
+);
 
 
 
