@@ -5,3 +5,4 @@ DROP TABLE IF EXISTS
     Organisation, Participation, Concert,Suivis, Amis,
     Groupe, Personnes, Utilisateurs
 CASCADE;
+DROP TYPE IF EXISTS type_tag, type_tag;
