@@ -4,3 +4,5 @@ DROP TABLE IF EXISTS
     Lieu_concert, Lieu, Archive, Concert_fini, Concert_prevu,
     Organisation, Participation, Concert, Amis,
     Groupe, Personnes, Utilisateurs;
+
+DROP TYPE IF EXISTS type_tag, type_tag;

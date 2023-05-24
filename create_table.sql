@@ -108,13 +108,13 @@ CREATE TABLE Artiste
     id_groupe INTEGER,
     FOREIGN KEY(id_groupe) REFERENCES Groupe(id_groupe)
 );
--- CREATE TYPE type_avis AS ENUM ('Morceau', 'Artiste', 'Lieu', 'Concert');
+CREATE TYPE type_avis AS ENUM ('Morceau', 'Artiste', 'Lieu', 'Concert');
 
 CREATE TABLE Avis
 (
     id_avis SERIAL PRIMARY KEY,
     id_type INTEGER NOT NULL,
-    type_avis  type_avis NOT NULL,
+    type_avis type_avis NOT NULL,
     note INTEGER NOT NULL CHECK (note >= 0 AND note <= 10),
     commentaire VARCHAR(140),
     date_avis DATE NOT NULL
@@ -144,9 +144,9 @@ CREATE TABLE Playlist
     id_user INTEGER NOT NULL,
     nom VARCHAR(30) NOT NULL,
     FOREIGN KEY(id_user) REFERENCES Utilisateurs(id_user),
-    CHECK(
-        SELECT COUNT(*) FROM Playlist WHERE id_user = {id_user} >=10
-    )
+   CONSTRAINT max_playlists CHECK (id_user IN (
+        SELECT id_user FROM Playlist GROUP BY id_user HAVING COUNT(*) <= 10
+    ))
 );
 
 CREATE TABLE Morceau
@@ -154,7 +154,7 @@ CREATE TABLE Morceau
     id_morceau SERIAL PRIMARY KEY,
     nom VARCHAR(30) NOT NULL,
     id_artiste INTEGER NOT NULL,
-    duree TIME NOT NULL
+    duree TIME NOT NULL,
     FOREIGN KEY(id_artiste) REFERENCES Artiste(id_artiste)
 );
 
@@ -181,13 +181,13 @@ CREATE TABLE Relation_genre
     FOREIGN KEY(id_parent) REFERENCES Genre(id_genre),
     FOREIGN KEY(id_fils) REFERENCES Genre(id_genre)
 );
--- CREATE TYPE type_tag AS ENUM('Groupe','Concert','Lieu','Playlist') ;
+CREATE TYPE type_tag AS ENUM('Groupe','Concert','Lieu','Playlist') ;
 
 CREATE TABLE Tag
 (
     id_tag SERIAL PRIMARY KEY,
     id_type INTEGER NOT NULL,
-    type_tag ENUM('Groupe','Concert','Lieu','Playlist') NOT NULL,
+    type_tag type_tag NOT NULL,
     valeur VARCHAR(30) NOT NULL
 );
 
