@@ -125,9 +125,9 @@ CREATE TABLE Artiste
     id_artiste SERIAL PRIMARY KEY,
     nom VARCHAR(30) NOT NULL,
     id_groupe INTEGER,
-    FOREIGN KEY(id_groupe) REFERENCES Groupe(id_groupe)
+    FOREIGN KEY(id_groupe) REFERENCES Groupe(id_user)
 );
-CREATE TYPE type_avis AS ENUM ('Morceau', 'Artiste', 'Lieu', 'Concert');
+CREATE TYPE type_avis AS ENUM ('Morceau', 'Artiste', 'Lieu', 'Concert','Archive');
 
 CREATE TABLE Avis
 (
@@ -139,6 +139,7 @@ CREATE TABLE Avis
     date_avis DATE NOT NULL
 );
 
+/* Je crois qu'on s'en fout
 CREATE TABLE Archive_avis
 (
     id_avis INTEGER NOT NULL,
@@ -147,6 +148,8 @@ CREATE TABLE Archive_avis
     FOREIGN KEY(id_avis) REFERENCES Avis(id_avis),
     FOREIGN KEY(id_archive) REFERENCES Archive(id_archive)   
 );
+
+*/
 
 CREATE TABLE Auteur_avis
 (
