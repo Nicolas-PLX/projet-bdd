@@ -11,15 +11,17 @@ CREATE TABLE Utilisateurs
 
 CREATE TABLE Personnes
 (
+    id_personne INTEGER PRIMARY KEY,
     date_naissance DATE,
-    PRIMARY KEY(id_user)
-) INHERITS Utilisateurs;
+    FOREIGN KEY(id_personne) REFERENCES Utilisateurs(id_user)
+);
 
 CREATE TABLE Organisme
 (
-    nom VARCHAR(30) NOT NULL,
-    PRIMARY KEY(id_user)
-) INHERITS Utilisateurs;
+    id_orga INTEGER PRIMARY KEY,
+    nom VARCHAR(50) NOT NULL,
+    FOREIGN KEY(id_orga) REFERENCES Utilisateurs(id_user)
+);
 
 CREATE TABLE Suivis
 (
@@ -78,8 +80,10 @@ CREATE TABLE Organisation
 CREATE TABLE Concert_prevu
 (
     id_concert INTEGER PRIMARY KEY,
-    nb_places_restantes INTEGER NOT NULL
-)INHERITS(Concert);
+    nb_places_restantes INTEGER NOT NULL,
+    FOREIGN KEY(id_concert) REFERENCES Concert(id_concert)
+);
+
 
 
 CREATE TABLE Archive
@@ -92,12 +96,16 @@ CREATE TABLE Archive
     FOREIGN KEY(id_concert) REFERENCES Concert(id_concert)
 );
 
+
 CREATE TABLE Concert_fini
 (
     id_archive INTEGER NOT NULL,
+    id_concert INTEGER NOT NULL,
     PRIMARY KEY(id_concert,id_archive),
+    FOREIGN KEY(id_concert) REFERENCES Concert(id_concert),
     FOREIGN KEY(id_archive) REFERENCES Archive(id_archive)
-)INHERITS(Concert);
+);
+
 
 CREATE TABLE Lieu
 (
@@ -126,17 +134,11 @@ CREATE TABLE Groupe
 CREATE TABLE Artiste
 (
     id_artiste SERIAL PRIMARY KEY,
-    nom VARCHAR(30) NOT NULL
+    nom VARCHAR(30) NOT NULL,
+    id_groupe INTEGER,
+    FOREIGN KEY(id_groupe) REFERENCES Groupe(id_groupe)
 );
 
-CREATE TABLE Membre_du_groupe
-(
-    id_groupe INTEGER NOT NULL,
-    id_artiste INTEGER NOT NULL,
-    PRIMARY KEY(id_groupe,id_artiste),
-    FOREIGN KEY(id_groupe) REFERENCES Groupe(id_groupe),
-    FOREIGN KEY(id_artiste) REFERENCES Artiste(id_artiste)
-);
 
 CREATE TYPE type_avis AS ENUM ('Morceau', 'Artiste', 'Lieu', 'Concert','Archive');
 

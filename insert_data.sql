@@ -1,8 +1,8 @@
 \i drop.sql
 \i create_table.sql
 
-/*
-DROP TABLE IF EXISTS temp_Lineup,temp_Tag,temp_Relation_genre,temp_Genre,temp_Contient,temp_Morceau,temp_Playlist,temp_Auteur_avis,temp_Archive_avis,temp_Avis,temp_Artiste,temp_Lieu,temp_Archive,temp_Organisation,temp_Participation,temp_concerts,temp_personnes,temp_relations,temp_users,temp_groupes CASCADE;
+
+DROP TABLE IF EXISTS temp_Lineup,temp_Tag,temp_Relation_genre,temp_Genre,temp_Contient,temp_Morceau,temp_Playlist,temp_Auteur_avis,temp_Archive_avis,temp_Avis,temp_Artiste,temp_Lieu,temp_Archive,temp_Organisation,temp_Participation,temp_concerts,temp_personnes,temp_relations,temp_users,temp_Lieu_concert,temp_groupes CASCADE;
 
 CREATE TEMP TABLE temp_users
 (
@@ -84,14 +84,14 @@ CREATE TEMP TABLE temp_Lieu_concert
     id_lieu INTEGER
 );
 
-
+\copy Groupe(nom,date_creation) FROM 'CSV/Groupe.csv' DELIMITER ',' CSV HEADER;
 \copy temp_personnes(id, date_naissance) FROM 'CSV/Personne.csv' DELIMITER ',' CSV HEADER;
 INSERT INTO Personnes(id_personne, date_naissance)
 SELECT id, date_naissance FROM temp_personnes;
 
 
 
-\copy temp_groupes(id, nom) FROM 'CSV/Groupe.csv' DELIMITER ',' CSV HEADER;
+\copy temp_groupes(id, nom) FROM 'CSV/Organisme.csv' DELIMITER ',' CSV HEADER;
 INSERT INTO Groupe(id_groupe, nom)
 SELECT id,nom  FROM temp_groupes;
 
@@ -143,7 +143,7 @@ CREATE TEMP TABLE temp_Artiste
     id_groupe INTEGER
 );
 \copy temp_Artiste(nom, id_groupe) FROM 'CSV/Artiste.csv' DELIMITER ',' CSV HEADER;
-INSERT INTO Artiste(nom, id_groupe)
+INSERT INTO Artiste(nom,id_groupe)
 SELECT nom, id_groupe FROM temp_Artiste;
 
 CREATE TEMP TABLE temp_Avis
@@ -261,4 +261,6 @@ SELECT id_concert, id_artiste, performance_index FROM temp_Lineup;
 -- select * from Personnes LIMIT 10;
 -- select * from Suivis LIMIT 10;
 -- select * from Amis LIMIT 10;
-*/
+
+DROP TABLE IF EXISTS temp_Lineup,temp_Tag,temp_Relation_genre,temp_Genre,temp_Contient,temp_Morceau,temp_Playlist,temp_Auteur_avis,temp_Archive_avis,temp_Avis,temp_Artiste,temp_Lieu,temp_Archive,temp_Organisation,temp_Participation,temp_concerts,temp_personnes,temp_relations,temp_users,temp_groupes CASCADE;
+
