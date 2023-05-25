@@ -1,25 +1,26 @@
--- Requête qui porte sur au moins 3 tables
-\! echo "Requête 1 : Les utilisateurs qui sont interessé par un concert qui à lieu en dehors de la France";
+-- Requête qui porte sur au moins 3 tables VERIFIE
+\! echo "Requête 1 : Les utilisateurs qui vont participé à un concert qui à lieu en dehors de la France";
 
 SELECT Utilisateurs.pseudo FROM Utilisateurs
 JOIN Participation ON Utilisateurs.id_user = Participation.id_user
 JOIN Concert ON Participation.id_concert = Concert.id_concert
 JOIN Lieu_concert ON Concert.id_concert = Lieu_concert.id_concert
 JOIN Lieu ON Lieu.id_lieu = Lieu_concert.id_lieu
-WHERE Participation.est_interesse = TRUE 
+WHERE Participation.est_interesse = True 
 AND Lieu.pays != 'France';
 
 -- auto jointure 
-\! echo "Requête 2 : Les Concert différent qui ont lieu dans la même ville à la même date :";
+\! echo "Requête 2 : Les utilisateurs qui habitent dans la même ville :";
 
 
-SELECT a1.suiveur AS Utilisateurs_1, a2.suiveur AS Utilisateurs_2
-FROM Amis a1 JOIN Amis a2 ON a1.suivi = a2.suivi AND a1.suiveur <> a2.suiveur
-WHERE a1.suiveur < a2.suiveur;
+SELECT u1.pseudo AS utilisateur1, u2.pseudo AS utilisateur2, u1.ville
+FROM Utilisateurs u1
+JOIN Utilisateurs u2 ON u1.ville = u2.ville AND u1.id_user <> u2.id_user
+;
 
 
 --Sous requête corrélée
-\! echo "Requête 3 : Les utilisateurs qui souhaite participé à tous les concert disponibles :";
+\! echo "Requête 3 : Les utilisateurs qui souhaitent participé à tous les concert disponibles :";
 
 SELECT Utilisateurs.pseudo FROM Utilisateurs
 WHERE NOT EXISTS (
@@ -90,7 +91,7 @@ ORDER BY note_moyenne DESC
 LIMIT 50;
 
 
---Requête avec calcul de deux agrégats : pas encore fait 
+--Requête avec calcul de deux agrégats 
 
 \! echo "Requête 9 : Calcul du maximum des prix et des nombres de places des concert finis";
 
@@ -115,9 +116,35 @@ LEFT JOIN Avis ON Auteur_avis.id_avis = Avis.id_avis
 GROUP BY Utilisateurs.id_user, Utilisateurs.pseudo
 HAVING COUNT(Avis.id_avis) > 0;
 
+
+-- Deux requête équivalentes l'une avec des sous requêtes corrélées et l'autre avec de l'agrégation : VERIFIE
+
+\! echo "Requête 11 : Les personnes qui ont assisté à chaque concert (agrégation):";
+SELECT u.*
+FROM Utilisateurs u
+LEFT JOIN Participation p ON p.id_personne = u.id_user
+GROUP BY u.id_user
+HAVING COUNT(DISTINCT p.id_concert) = (
+    SELECT COUNT(*) FROM Concert
+);
+
+\! echo "Requête 12 : Les personnes qui ont assisté à chaque concert (corrélées) :"
+SELECT *
+FROM Utilisateurs u
+WHERE NOT EXISTS (
+    SELECT *
+    FROM Concert c
+    WHERE NOT EXISTS (
+        SELECT *
+        FROM Participation p
+        WHERE p.id_personne = u.id_user
+        AND p.id_concert = c.id_concert
+    )
+);
+
 --Requête récursive : pas sûr du tout mais bon
 
-\! echo "Requête 11 : Requête récursive : arbre généalogiques des genres "
+\! echo "Requête 13 : Requête récursive : arbre généalogiques des genres "
 
 WITH RECURSIVE Arborescence_Genres AS (
     SELECT id_genre, nom, ARRAY[id_genre] AS chemin
@@ -135,7 +162,7 @@ ORDER BY chemin;
 
 -- Requête avec fenêtrage
 
-\! echo "Requête 12 : Pour chaque mois de l'année 2022, les dix groupes dont les concerts ont eu le plus de succès en termes de nombres d'utilisateurs souhaitant y participer :";
+\! echo "Requête 14 : Pour chaque mois de l'année 2022, les dix groupes dont les concerts ont eu le plus de succès en termes de nombres d'utilisateurs souhaitant y participer :";
 
 --
 WITH concerts_populaires AS (
@@ -159,7 +186,7 @@ WHERE C.rang <= 10
 ORDER BY C.mois, C.rang;
 
 
-\! echo "Requête 13 :"
+\! echo "Requête 15 :"
 
 
 

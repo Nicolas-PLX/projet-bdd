@@ -1,0 +1,5 @@
+- Dans le dossier CSV, on retrouve tout les fichiers CSV permettant de remplir les tables d'informations.
+- Le fichier 'create_table.sql' permet de créer les tables de notre base de données.
+- Le fichier 'drop.sql' permet de supprimer tout les tables et type créés.
+- Le fichier 'insert_data.sql' permet de remplir nos tables avec les informations contenus dans nos CSV.
+- Le fichier 'Requete_sql.sql' permet d'effectuer les requêtes demandé dans le sujet.

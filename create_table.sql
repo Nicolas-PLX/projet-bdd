@@ -15,7 +15,7 @@ CREATE TABLE Personnes
     PRIMARY KEY(id_user)
 ) INHERITS(Utilisateurs);
 
-CREATE TABLE Groupe
+CREATE TABLE Organisme
 (
     nom VARCHAR(30) NOT NULL,
     PRIMARY KEY(id_user)
@@ -46,9 +46,9 @@ CREATE TABLE Concert
     date_concert DATE NOT NULL,
     prix FLOAT NOT NULL,
     nb_places INTEGER NOT NULL,
-    volontaires boolean NOT NULL,
-    cause_soutien VARCHAR(30),
-    enfants_admissibles BOOLEAN NOT NULL
+    volontaires boolean,
+    cause_soutien VARCHAR(80),
+    enfants_admissibles BOOLEAN
 );
 
 CREATE TABLE Participation
@@ -77,12 +77,6 @@ CREATE TABLE Concert_prevu
     nb_places_restantes INTEGER NOT NULL
 )INHERITS(Concert);
 
-CREATE TABLE Concert_fini
-(
-    id_archive INTEGER NOT NULL,
-    PRIMARY KEY(id_concert,id_archive)
-    -- should I add a foreign key here ?
-)INHERITS(Concert);
 
 CREATE TABLE Archive
 (
@@ -93,6 +87,13 @@ CREATE TABLE Archive
     video VARCHAR(50),
     FOREIGN KEY(id_concert) REFERENCES Concert(id_concert)
 );
+
+CREATE TABLE Concert_fini
+(
+    id_archive INTEGER NOT NULL,
+    PRIMARY KEY(id_concert,id_archive),
+    FOREIGN KEY(id_archive) REFERENCES Archive(id_archive)
+)INHERITS(Concert);
 
 CREATE TABLE Lieu
 (
@@ -112,13 +113,28 @@ CREATE TABLE Lieu_concert
     FOREIGN KEY (id_lieu) REFERENCES Lieu(id_lieu) 
 );
 
+CREATE TABLE Groupe
+(
+    id_groupe SERIAL PRIMARY KEY,
+    nom VARCHAR(50) NOT NULL,
+    date_creation DATE
+);
+
 CREATE TABLE Artiste
 (
     id_artiste SERIAL PRIMARY KEY,
-    nom VARCHAR(30) NOT NULL,
-    id_groupe INTEGER,
-    FOREIGN KEY(id_groupe) REFERENCES Groupe(id_user)
+    nom VARCHAR(30) NOT NULL
 );
+
+CREATE TABLE Membre_du_groupe
+(
+    id_groupe INTEGER NOT NULL,
+    id_artiste INTEGER NOT NULL,
+    PRIMARY KEY(id_groupe,id_artiste),
+    FOREIGN KEY(id_groupe) REFERENCES Groupe(id_groupe),
+    FOREIGN KEY(id_artiste) REFERENCES Artiste(id_artiste)
+);
+
 CREATE TYPE type_avis AS ENUM ('Morceau', 'Artiste', 'Lieu', 'Concert','Archive');
 
 CREATE TABLE Avis
@@ -131,7 +147,6 @@ CREATE TABLE Avis
     date_avis DATE NOT NULL
 );
 
-/* Je crois qu'on s'en fout
 CREATE TABLE Archive_avis
 (
     id_avis INTEGER NOT NULL,
@@ -141,7 +156,6 @@ CREATE TABLE Archive_avis
     FOREIGN KEY(id_archive) REFERENCES Archive(id_archive)   
 );
 
-*/
 
 CREATE TABLE Auteur_avis
 (
@@ -158,9 +172,6 @@ CREATE TABLE Playlist
     id_user INTEGER NOT NULL,
     nom VARCHAR(30) NOT NULL,
     FOREIGN KEY(id_user) REFERENCES Utilisateurs(id_user)
-    -- CHECK(
-    --     SELECT COUNT(*) FROM Playlist WHERE id_user = {id_user} >=10
-    -- )
 );
 
 CREATE TABLE Morceau
@@ -187,6 +198,15 @@ CREATE TABLE Genre
     nom VARCHAR(30) NOT NULL
 );
 
+CREATE TABLE Genre_Morceau
+(
+    id_genre INTEGER NOT NULL,
+    id_morceau INTEGER NOT NULL,
+    PRIMARY KEY(id_genre,id_morceau),
+    FOREIGN KEY(id_genre) REFERENCES Genre(id_genre),
+    FOREIGN KEY(id_morceau) REFERENCES Morceau(id_morceau)
+);
+
 CREATE TABLE Relation_genre
 (
     id_parent INTEGER NOT NULL,
@@ -202,7 +222,8 @@ CREATE TABLE Tag
     id_tag SERIAL PRIMARY KEY,
     id_type INTEGER NOT NULL,
     type_tag type_tag NOT NULL,
-    valeur VARCHAR(30) NOT NULL
+    valeur VARCHAR(30) NOT NULL,
+    CONSTRAINT valeur_unique UNIQUE(valeur)
 );
 
 
@@ -215,6 +236,17 @@ CREATE TABLE Lineup
     FOREIGN KEY(id_concert) REFERENCES Concert(id_concert),
     FOREIGN KEY(id_artiste) REFERENCES Artiste(id_artiste),
     UNIQUE(id_concert, performance_index)
+);
+
+CREATE TABLE Notes
+(
+    id_user INTEGER NOT NULL,
+    id_morceau INTEGER NOT NULL,
+    note INTEGER NOT NULL,
+    PRIMARY KEY(id_user,id_morceau),
+    FOREIGN KEY(id_user) REFERENCES Utilisateurs(id_user),
+    FOREIGN KEY(id_morceau) REFERENCES Morceau(id_morceau),
+    CHECK(note >= 0 and note <= 10)
 );
 
 
