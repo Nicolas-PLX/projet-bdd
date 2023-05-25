@@ -69,10 +69,10 @@ CREATE TABLE Participation
 
 CREATE TABLE Organisation
 (
-    id_user INTEGER NOT NULL,
+    id_orga INTEGER NOT NULL,
     id_concert INTEGER NOT NULL,
-    PRIMARY KEY(id_user,id_concert),
-    FOREIGN KEY(id_user) REFERENCES Utilisateurs(id_user),
+    PRIMARY KEY(id_orga,id_concert),
+    FOREIGN KEY(id_orga) REFERENCES Organisme(id_orga),
     FOREIGN KEY(id_concert) REFERENCES Concert(id_concert)
 );
 

@@ -2,7 +2,7 @@
 \i create_table.sql
 
 
-DROP TABLE IF EXISTS temp_Lineup,temp_Tag,temp_Relation_genre,temp_Genre,temp_Contient,temp_Morceau,temp_Playlist,temp_Auteur_avis,temp_Archive_avis,temp_Avis,temp_Artiste,temp_Lieu,temp_Archive,temp_Organisation,temp_Participation,temp_concerts,temp_personnes,temp_relations,temp_users,temp_Lieu_concert,temp_groupes CASCADE;
+DROP TABLE IF EXISTS temp_Lineup,temp_Tag,temp_Relation_genre,temp_Genre,temp_Contient,temp_Morceau,temp_Playlist,temp_Auteur_avis,temp_Archive_avis,temp_Avis,temp_Artiste,temp_Lieu,temp_Archive,temp_Organisation,temp_Participation,temp_concerts,temp_personnes,temp_relations,temp_users,temp_Lieu_concert,temp_organismes CASCADE;
 
 CREATE TEMP TABLE temp_users
 (
@@ -27,7 +27,7 @@ CREATE TEMP TABLE temp_personnes
     date_naissance DATE
 );
 
-CREATE TEMP TABLE temp_groupes
+CREATE TEMP TABLE temp_organismes
 (
     id INTEGER,
     nom VARCHAR(30)
@@ -58,7 +58,7 @@ CREATE TEMP TABLE temp_Participation
 );
 CREATE TEMP TABLE temp_Organisation
 (
-    id_user INTEGER,
+    id_orga INTEGER,
     id_concert INTEGER
 );
 
@@ -91,9 +91,9 @@ SELECT id, date_naissance FROM temp_personnes;
 
 
 
-\copy temp_groupes(id, nom) FROM 'CSV/Organisme.csv' DELIMITER ',' CSV HEADER;
-INSERT INTO Groupe(id_groupe, nom)
-SELECT id,nom  FROM temp_groupes;
+\copy temp_organismes(id, nom) FROM 'CSV/Organisme.csv' DELIMITER ',' CSV HEADER;
+INSERT INTO Organisme(id_orga, nom)
+SELECT id,nom  FROM temp_organismes;
 
 
 \copy temp_relations(id1, id2) FROM 'CSV/Suivis.csv' DELIMITER ',' CSV HEADER;
@@ -113,13 +113,15 @@ INSERT INTO Participation(id_personne, id_concert, est_interesse, a_participe)
 SELECT id_personne, id_concert, est_interesse, a_participe FROM temp_Participation;
 
 
-\copy temp_Organisation(id_user, id_concert) FROM 'CSV/Organisation.csv' DELIMITER ',' CSV HEADER;
-INSERT INTO Organisation(id_user, id_concert)
-SELECT id_user, id_concert FROM temp_Organisation;
+\copy temp_Organisation(id_orga, id_concert) FROM 'CSV/Organisation.csv' DELIMITER ',' CSV HEADER;
+INSERT INTO Organisation(id_orga, id_concert)
+SELECT id_orga, id_concert FROM temp_Organisation;
 
 
 INSERT INTO Concert_prevu(id_concert, nb_places_restantes)
 SELECT id_concert, nb_places-10 FROM Concert;
+
+DELETE FROM Concert_prevu WHERE id_concert = 1 OR id_concert = 2;
 
 \copy temp_Archive(id_concert, nb_participant, lien_photo, lien_video) FROM 'CSV/Archive.csv' DELIMITER ',' CSV HEADER;
 INSERT INTO Archive(id_concert, nb_participant, lien_photo, lien_video)
@@ -262,5 +264,5 @@ SELECT id_concert, id_artiste, performance_index FROM temp_Lineup;
 -- select * from Suivis LIMIT 10;
 -- select * from Amis LIMIT 10;
 
-DROP TABLE IF EXISTS temp_Lineup,temp_Tag,temp_Relation_genre,temp_Genre,temp_Contient,temp_Morceau,temp_Playlist,temp_Auteur_avis,temp_Archive_avis,temp_Avis,temp_Artiste,temp_Lieu,temp_Archive,temp_Organisation,temp_Participation,temp_concerts,temp_personnes,temp_relations,temp_users,temp_groupes CASCADE;
+DROP TABLE IF EXISTS temp_Lineup,temp_Tag,temp_Relation_genre,temp_Genre,temp_Contient,temp_Morceau,temp_Playlist,temp_Auteur_avis,temp_Archive_avis,temp_Avis,temp_Artiste,temp_Lieu,temp_Archive,temp_Organisation,temp_Participation,temp_concerts,temp_personnes,temp_relations,temp_users,temp_Lieu_concert,temp_organismes CASCADE;
 
