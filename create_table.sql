@@ -11,14 +11,14 @@ CREATE TABLE Utilisateurs
 
 CREATE TABLE Personnes
 (
-    id INTEGER PRIMARY KEY,
-    date_naissance DATE
+    date_naissance DATE,
+    PRIMARY KEY(id_user)
 ) INHERITS(Utilisateurs);
 
 CREATE TABLE Groupe
 (
-    id_groupe INTEGER PRIMARY KEY,
-    nom VARCHAR(30) NOT NULL
+    nom VARCHAR(30) NOT NULL,
+    PRIMARY KEY(id_user)
 ) INHERITS(Utilisateurs);
 
 CREATE TABLE Suivis
@@ -57,7 +57,7 @@ CREATE TABLE Participation
     id_concert INTEGER NOT NULL,
     est_interesse boolean NOT NULL,
     PRIMARY KEY(id_personne,id_concert),
-    FOREIGN KEY(id_personne) REFERENCES Personnes(id),
+    FOREIGN KEY(id_personne) REFERENCES Personnes(id_user),
     FOREIGN KEY(id_concert) REFERENCES Concert(id_concert)
 );
 
@@ -117,7 +117,7 @@ CREATE TABLE Artiste
     id_artiste SERIAL PRIMARY KEY,
     nom VARCHAR(30) NOT NULL,
     id_groupe INTEGER,
-    FOREIGN KEY(id_groupe) REFERENCES Groupe(id_groupe)
+    FOREIGN KEY(id_groupe) REFERENCES Groupe(id_user)
 );
 CREATE TYPE type_avis AS ENUM ('Morceau', 'Artiste', 'Lieu', 'Concert','Archive');
 
