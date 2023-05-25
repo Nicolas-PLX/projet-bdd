@@ -243,16 +243,5 @@ CREATE TABLE Lineup
     UNIQUE(id_concert, performance_index)
 );
 
-CREATE TABLE Notes
-(
-    id_user INTEGER NOT NULL,
-    id_morceau INTEGER NOT NULL,
-    note INTEGER NOT NULL,
-    PRIMARY KEY(id_user,id_morceau),
-    FOREIGN KEY(id_user) REFERENCES Utilisateurs(id_user),
-    FOREIGN KEY(id_morceau) REFERENCES Morceau(id_morceau),
-    CHECK(note >= 0 and note <= 10)
-);
-
 
 
