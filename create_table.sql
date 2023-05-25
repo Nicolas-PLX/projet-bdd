@@ -145,7 +145,7 @@ CREATE TYPE type_avis AS ENUM ('Morceau', 'Artiste', 'Lieu', 'Concert','Archive'
 CREATE TABLE Avis
 (
     id_avis SERIAL PRIMARY KEY,
-    -- id_type INTEGER NOT NULL,
+    id_type INTEGER NOT NULL,
     type_avis type_avis NOT NULL,
     note INTEGER NOT NULL CHECK (note >= 0 AND note <= 10),
     commentaire VARCHAR(140),

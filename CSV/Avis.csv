@@ -1,16 +1,16 @@
-type_avis,note,commentaire,date_avis
-Morceau,8,"Great song",2023-01-15
-Artiste,7,"Talented artist",2023-02-28
-Morceau,9,"Awesome track",2023-03-12
-Lieu,6,"Average venue",2023-04-05
-Artiste,5,"Disappointing performance",2023-05-20
-Morceau,7,"Good tune",2023-02-10
-Concert,9,"Unforgettable experience",2023-04-18
-Artiste,6,"Needs improvement",2023-03-05
-Morceau,8,"Catchy melody",2023-05-07
-Lieu,7,"Nice atmosphere",2023-01-29
-Artiste,9,"Impressive vocals",2023-04-30
-Morceau,5,"Not my style",2023-02-22
-Concert,8,"Energetic performance",2023-03-20
-Lieu,6,"Crowded venue",2023-05-15
-Artiste,7,"Unique sound",2023-04-02
+type_avis,id_type,note,commentaire,date_avis
+Morceau,5,8,"Great song",2023-01-15
+Artiste,6,7,"Talented artist",2023-02-28
+Morceau,10,9,"Awesome track",2023-03-12
+Lieu,3,6,"Average venue",2023-04-05
+Artiste,15,5,"Disappointing performance",2023-05-20
+Morceau,11,7,"Good tune",2023-02-10
+Concert,3,9,"Unforgettable experience",2023-04-18
+Artiste,9,6,"Needs improvement",2023-03-05
+Morceau,19,8,"Catchy melody",2023-05-07
+Lieu,12,7,"Nice atmosphere",2023-01-29
+Artiste,14,9,"Impressive vocals",2023-04-30
+Morceau,7,5,"Not my style",2023-02-22
+Concert,8,8,"Energetic performance",2023-03-20
+Lieu,6,6,"Crowded venue",2023-05-15
+Artiste,2,7,"Unique sound",2023-04-02

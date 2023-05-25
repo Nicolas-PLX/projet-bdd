@@ -151,13 +151,14 @@ SELECT nom, id_groupe FROM temp_Artiste;
 CREATE TEMP TABLE temp_Avis
 (
     type_avis type_avis,
+    id_type INTEGER,
     note INTEGER CHECK (note >= 0 AND note <= 10),
     commentaire VARCHAR(140),
     date_avis DATE
 );
-\copy temp_Avis(type_avis, note, commentaire, date_avis) FROM 'CSV/Avis.csv' DELIMITER ',' CSV HEADER;
-INSERT INTO Avis(type_avis, note, commentaire, date_avis)
-SELECT type_avis, note, commentaire, date_avis FROM temp_Avis;
+\copy temp_Avis(type_avis, id_type,note, commentaire, date_avis) FROM 'CSV/Avis.csv' DELIMITER ',' CSV HEADER;
+INSERT INTO Avis(type_avis, id_type,note, commentaire, date_avis)
+SELECT type_avis,id_type, note, commentaire, date_avis FROM temp_Avis;
 
 
 CREATE TEMP TABLE temp_Archive_avis
