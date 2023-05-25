@@ -1,8 +1,6 @@
 -- Requête qui porte sur au moins 3 tables VERIFIE
 \! echo "Requête 1 : Les utilisateurs qui sont intéréssé à un concert qui à lieu en dehors de la France";
 
-SELECT Utilisateurs.pseudo,Concert.nom FROM Utilisateurs
-JOIN Participation ON Utilisateurs.id_user = Participation.id_personne
 SELECT Utilisateurs.pseudo FROM Utilisateurs
 JOIN Participation ON Utilisateurs.id_user = Participation.id_personne
 JOIN Concert ON Participation.id_concert = Concert.id_concert
@@ -71,9 +69,9 @@ HAVING AVG(Avis.note) > 8;
 \! echo "Requête 7 : Les artistes avec au moins 3 morceaux sur la plateforme :";
 SELECT A.nom, COUNT(M.id_morceau) AS nombre_de_morceaux
 FROM Artiste A JOIN Morceau M
-ON Artiste.id_artiste = Morceau.id_artiste
-GROUP BY Artiste.nom
-HAVING COUNT(Morceau.id_morceau) >= 5
+ON A.id_artiste = M.id_artiste
+GROUP BY A.nom
+HAVING COUNT(M  .id_morceau) >= 5
 ORDER BY nombre_de_morceaux DESC;
 
 
@@ -161,7 +159,7 @@ SELECT * FROM genre_hierarchy ORDER BY root;
 */
 -- Requête avec fenêtrage
 
-\! echo "Requête 14 : Pour chaque mois de l'année 2022, les dix groupes dont les concerts ont eu le plus de succès en termes de nombres d'utilisateurs souhaitant y participer :";
+\! echo "Requête 14 : Pour chaque mois de l'année 2023, les dix groupes dont les concerts ont eu le plus de succès en termes de nombres d'utilisateurs souhaitant y participer :";
 
 --
 WITH monthly_interest AS (
@@ -173,10 +171,12 @@ WITH monthly_interest AS (
             PARTITION BY EXTRACT(MONTH FROM c.date_concert)
             ORDER BY COUNT(p.id_personne) DESC
         ) as rn
-    FROM  Concert c JOIN Lineup l ON c.id_concert = l.id_concert
-    JOIN Groupe g ON l.id_artiste = g.id_groupe
+    FROM  Concert c 
+    JOIN Lineup l ON c.id_concert = l.id_concert
+    JOIN Artiste a ON l.id_artiste = a.id_artiste
+    JOIN Groupe g ON a.id_groupe = g.id_groupe
     JOIN Participation p ON c.id_concert = p.id_concert
-    WHERE EXTRACT(YEAR FROM c.date_concert) = 2022 AND p.est_interesse = true
+    WHERE EXTRACT(YEAR FROM c.date_concert) = 2023 AND p.est_interesse = true
     GROUP BY month, group_name
 )
 SELECT month, group_name, interested_users_count
@@ -214,8 +214,8 @@ JOIN Concert c ON org.id_concert = c.id_concert
 GROUP BY nom_organisme
 ORDER BY nombre_concerts DESC;
 
-\! echo "Requête 17 : La une liste de toutes les playlists et le nombre moyen de morceaux par playlist"
-SELECT p.nom AS nom_playlist, AVG(COUNT(c.id_morceau)) AS moyenne_morceaux
+\! echo "Requête 17 : La une liste de toutes les playlists et le nombre  de morceaux par playlist"
+SELECT p.nom AS nom_playlist, (COUNT(c.id_morceau)) AS moyenne_morceaux
 FROM Playlist p
 NATURAL JOIN Contient c
 GROUP BY nom_playlist;
