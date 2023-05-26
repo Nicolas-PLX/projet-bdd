@@ -1,7 +1,7 @@
 -- Requête qui porte sur au moins 3 tables VERIFIE
 \! echo "Requête 1 : Les utilisateurs qui sont intéréssé à un concert qui à lieu en dehors de la France";
 
-SELECT Utilisateurs.pseudo FROM Utilisateurs
+SELECT DISTINCT Utilisateurs.pseudo FROM Utilisateurs
 JOIN Participation ON Utilisateurs.id_user = Participation.id_personne
 JOIN Concert ON Participation.id_concert = Concert.id_concert
 JOIN Lieu_concert ON Concert.id_concert = Lieu_concert.id_concert
@@ -244,7 +244,7 @@ WITH RECURSIVE SuivisUtilisateur(suiveur, suivi) AS (
 SELECT DISTINCT suivi
 FROM SuivisUtilisateur;
 
-\i echo "Requête 20 : Requête récursive qui va récupérer tout les parents d'un genre donné :";
+\! echo "Requête 20 : Requête récursive qui va récupérer tout les parents d'un genre donné :";
 
 \prompt 'Tapez l id du genre à celui dont vous souhaitez voir ses parents ->' c_genre
 WITH RECURSIVE GenresParents(id_genre, id_parent) AS (
@@ -257,8 +257,7 @@ WITH RECURSIVE GenresParents(id_genre, id_parent) AS (
   JOIN Relation_genre ON GenresParents.id_parent = Relation_genre.id_fils
 )
 SELECT id_parent
-FROM GenresParents 
-ORDER BY id_parent DESC;
+FROM GenresParents;
 
 \! echo "Requête 21 : Ne marche pas mais il y a eu une tentative. Cela aurait du être : Pour chaque mois de 2023, les dix groupes dont les concert ont eu le plus de succès ce mois-ci, en termes de nombres d'utilisateurs interessé"
 WITH monthly_interest AS (
