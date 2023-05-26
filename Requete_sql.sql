@@ -71,7 +71,7 @@ SELECT A.nom, COUNT(M.id_morceau) AS nombre_de_morceaux
 FROM Artiste A JOIN Morceau M
 ON A.id_artiste = M.id_artiste
 GROUP BY A.nom
-HAVING COUNT(M  .id_morceau) >= 5
+HAVING COUNT(M.id_morceau) >= 5
 ORDER BY nombre_de_morceaux DESC;
 
 
