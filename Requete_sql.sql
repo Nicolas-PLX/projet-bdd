@@ -173,11 +173,9 @@ HAVING COUNT(DISTINCT c.id_concert) = (
     JOIN Lieu ON Lieu.id_lieu = Lieu_concert.id_lieu
     WHERE ville = :'v_ville'
 );
---
 
 
-
-\! echo "Requête 16 : La liste de tous les organismes et le nombre de concerts qu'ils ont organisés ordre decroissant."
+\! echo "Requête 16 : La liste de tous les organismes et le nombre de concerts qu'ils ont organisés par ordre decroissant."
 
 
 SELECT o.nom AS nom_organisme, COUNT(c.id_concert) AS nombre_concerts
