@@ -3,3 +3,4 @@
 - Le fichier 'drop.sql' permet de supprimer tout les tables et type créés.
 - Le fichier 'insert_data.sql' permet de remplir nos tables avec les informations contenus dans nos CSV.
 - Le fichier 'Requete_sql.sql' permet d'effectuer les requêtes demandé dans le sujet.
+- Le fichier 'recommendation.sql' permet d'effectuer l'algorithme de recommandation.
