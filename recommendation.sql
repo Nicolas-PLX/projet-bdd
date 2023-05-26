@@ -1,4 +1,6 @@
 
+\prompt 'Tapez le pseudo  ->' c_genre
+
 PREPARE location_score(text, text) AS
 SELECT (u.pays = l.pays)::integer AS location_score
 FROM Utilisateurs u ,Concert c
@@ -53,12 +55,12 @@ PREPARE recommendation_score(text) AS
 SELECT 
     c.id_concert,
     (
-        (SELECT location_score(u.pseudo, c.nom)) +
-        (SELECT event_history_score(u.pseudo, (SELECT nom FROM Artiste WHERE id_artiste = (SELECT id_artiste FROM Lineup WHERE id_concert = c.id_concert)))) +
-        (SELECT friend_event_score(u.pseudo, (SELECT nom FROM Artiste WHERE id_artiste = (SELECT id_artiste FROM Lineup WHERE id_concert = c.id_concert))))    
+        (SELECT  location_score FROM EXECUTE location_score(u.pseudo, c.nom)) +
+        (SELECT event_history_score FROM EXECUTE event_history_score(u.pseudo, (SELECT nom FROM Artiste WHERE id_artiste = (SELECT id_artiste FROM Lineup WHERE id_concert = c.id_concert)))) +
+        (SELECT friend_event_score FROM EXECUTE friend_event_score(u.pseudo, (SELECT nom FROM Artiste WHERE id_artiste = (SELECT id_artiste FROM Lineup WHERE id_concert = c.id_concert))))    
     ) AS total_score
 FROM Concert c
-JOIN Utilisateurs u ON true;
+JOIN Utilisateurs u ON u.pseudo = $1;
 
 EXECUTE recommendation_score('Marthe_ini');
 
@@ -67,3 +69,5 @@ DEALLOCATE location_score;
 DEALLOCATE event_history_score;
 DEALLOCATE friend_event_score;
 DEALLOCATE recommendation_score;
+
+
