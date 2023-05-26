@@ -3,7 +3,7 @@ id_personne,id_concert,est_interesse,a_participe
 20,1,true,false 
 36,6,true,false
 29,10,false,true
-8,2,false,true
+8,1,false,true
 16,8,false,true
 9,3,false,true
 49,7,true,false
