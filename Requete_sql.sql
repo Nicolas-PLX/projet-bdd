@@ -1,7 +1,7 @@
 -- Requête qui porte sur au moins 3 tables VERIFIE
-\! echo "Requête 1 : Les utilisateurs qui vont participé à un concert qui à lieu en dehors de la France";
+\! echo "Requête 1 : Les utilisateurs qui sont intéréssé à un concert qui à lieu en dehors de la France";
 
-SELECT Utilisateurs.pseudo,Concert.nom FROM Utilisateurs
+SELECT Utilisateurs.pseudo FROM Utilisateurs
 JOIN Participation ON Utilisateurs.id_user = Participation.id_personne
 JOIN Concert ON Participation.id_concert = Concert.id_concert
 JOIN Lieu_concert ON Concert.id_concert = Lieu_concert.id_concert
@@ -11,8 +11,6 @@ AND Lieu.pays != 'France';
 
 -- auto jointure 
 \! echo "Requête 2 : Les utilisateurs qui habitent dans la même ville :";
-
-
 SELECT DISTINCT u1.pseudo AS utilisateur1, u2.pseudo AS utilisateur2, u1.ville
 FROM Utilisateurs u1
 JOIN Utilisateurs u2 ON u1.ville = u2.ville AND u1.id_user <> u2.id_user AND u1.id_user < u2.id_user
@@ -69,18 +67,17 @@ GROUP BY Artiste.nom
 HAVING AVG(Avis.note) > 8;
 
 \! echo "Requête 7 : Les artistes avec au moins 3 morceaux sur la plateforme :";
-
 SELECT A.nom, COUNT(M.id_morceau) AS nombre_de_morceaux
 FROM Artiste A JOIN Morceau M
 ON A.id_artiste = M.id_artiste
 GROUP BY A.nom
-HAVING COUNT(M.id_morceau) >= 3
+HAVING COUNT(M  .id_morceau) >= 5
 ORDER BY nombre_de_morceaux DESC;
 
 
 --Requête bonus intéressante pour le projet : les 50 morceaux les plus aimés, ainsi que l'artiste qui a réalisé le morceau, ranger dans l'ordre décroissant.
 
-\! echo "Requête 8 : Les 10 morceaux les plus appréciés de la plateforme :";
+\! echo "Requête 8 : Les 5 morceaux les plus appréciés de la plateforme :";
 
 SELECT Morceau.nom AS nom_morceau, Artiste.nom AS nom_artiste, AVG(Avis.note) AS note_moyenne
 FROM Morceau
@@ -88,7 +85,7 @@ JOIN Artiste ON Morceau.id_artiste = Artiste.id_artiste
 JOIN Avis ON Morceau.id_morceau = Avis.id_type AND Avis.type_avis = 'Morceau'
 GROUP BY Morceau.id_morceau, Artiste.nom
 ORDER BY note_moyenne DESC
-LIMIT 10;
+LIMIT 5;
 
 
 --Requête avec calcul de deux agrégats 
@@ -99,6 +96,7 @@ SELECT COUNT(DISTINCT c.id_concert) AS total_concerts, AVG(c.prix) AS average_pr
 FROM Concert c
 JOIN Participation p ON c.id_concert = p.id_concert
 WHERE p.a_participe = true;
+
 
 --Requête avec une jointure externe
 
@@ -130,18 +128,21 @@ WHERE u.id_user IN (SELECT u.id_user
                   FROM Participation p 
                   WHERE u.id_user = p.id_personne AND p.a_participe = True);
 
---Requête récursive : pas sûr du tout mais bon
 
-\! echo "Requête 13 : Requête récursive : arbre généalogiques des genres "
-SELECT a.nom AS nom_artiste,COUNT(DISTINCT l.id_concert) AS nombre_concerts
-FROM Artiste a
-JOIN Lineup l ON a.id_artiste = l.id_artiste
-GROUP BY a.id_artiste, a.nom
-ORDER BY COUNT(DISTINCT l.id_concert) DESC;
+\! echo "Requête 13 : La liste des 5 paires d'artistes qui se produisent généralement le plus ensemble, avec le nombre de performances qu'ils ont faites ensemble."
+
+SELECT a1.nom AS artiste_1, a2.nom AS artiste_2, COUNT(*) AS nombre_performances_ensemble
+FROM Lineup l1
+JOIN Lineup l2 ON l1.id_concert = l2.id_concert AND l1.id_artiste <> l2.id_artiste
+JOIN Artiste a1 ON l1.id_artiste = a1.id_artiste
+JOIN Artiste a2 ON l2.id_artiste = a2.id_artiste
+GROUP BY artiste_1, artiste_2
+ORDER BY nombre_performances_ensemble DESC LIMIT 5;
+
 
 -- Requête avec fenêtrage
 
-\! echo "Requête 14 : Classement des utilisateurs en fonction de leur participation à des concerts:";
+\! echo "Requête 14 : Classement des utilisateurs en fonction de leur participation à des concerts :";
 
 
 SELECT id_user, pseudo, participations,
@@ -172,14 +173,36 @@ HAVING COUNT(DISTINCT c.id_concert) = (
     JOIN Lieu ON Lieu.id_lieu = Lieu_concert.id_lieu
     WHERE ville = :'v_ville'
 );
+--
 
 
-\! echo "Requête 16 : Calcule de la différence de prix entre chaque concert et le concert précédent dans une même ville :";
-SELECT c.id_concert, c.nom, c.date_concert, l.ville, c.prix,
-       prix - LAG(prix) OVER (PARTITION BY ville ORDER BY date_concert) AS diff_prix
-FROM Concert c JOIN Lieu_concert lc ON c.id_concert = lc.id_concert
-JOIN Lieu l ON lc.id_lieu = l.id_lieu
-ORDER BY ville, date_concert;
+
+\! echo "Requête 16 : La liste de tous les organismes et le nombre de concerts qu'ils ont organisés ordre decroissant."
+
+
+SELECT o.nom AS nom_organisme, COUNT(c.id_concert) AS nombre_concerts
+FROM Organisme o
+JOIN Organisation org ON o.id_orga = org.id_orga
+JOIN Concert c ON org.id_concert = c.id_concert
+GROUP BY nom_organisme
+ORDER BY nombre_concerts DESC;
+
+
+\! echo "Requête 16bis : La liste des artistes qui ont joué plus de 2 fois dans des concerts dont le prix était supérieur à 120 euros."
+SELECT a.nom AS nom_artiste, COUNT(*) AS nombre_concerts
+FROM Artiste a
+JOIN Lineup l ON a.id_artiste = l.id_artiste
+JOIN Concert c ON l.id_concert = c.id_concert
+WHERE 
+    EXISTS (
+        SELECT 1 
+        FROM Concert c2 
+        WHERE c2.id_concert = c.id_concert AND c2.prix > 120
+    )
+GROUP BY nom_artiste
+HAVING COUNT(*) > 2
+ORDER BY nombre_concerts DESC;
+
 
 \! echo "Requête 17 :La liste des villes qui ont une moyenne de prix de concert supérieur à la moyenne générale :";
 
@@ -197,7 +220,7 @@ FROM avg_prices a
 JOIN overall_avg o ON a.moyenne_prix > o.moyenne_generale
 ORDER BY a.moyenne_prix DESC;
 
-\i echo "Requête 18 : La liste des utilisateurs ayant des morceaux en commun dans leur playlist, ainsi que le nombre de morceaux en commun :";
+\! echo "Requête 18 : La liste des utilisateurs ayant des morceaux en commun dans leur playlist, ainsi que le nombre de morceaux en commun :";
 
 SELECT DISTINCT p1.id_user AS utilisateur_1, p2.id_user AS utilisateur_2, COUNT(*) AS nombre_morceaux_communs
 FROM Playlist p1
@@ -207,7 +230,7 @@ JOIN Playlist p2 ON c2.id_playlist = p2.id_playlist
 WHERE p1.id_user < p2.id_user 
 GROUP BY p1.id_user, p2.id_user;
 
-\i echo "Requête 19 : Requête récursive qui va récupérer la liste de tous les utilisateurs qui sont suivis par un utilisateur donné";
+\! echo "Requête 19 : Requête récursive qui va récupérer la liste de tous les utilisateurs qui sont suivis par un utilisateur donné";
 
 
 \prompt 'Tapez l id de l utilisateur que vous souhaitez voir ->' c_user
@@ -238,3 +261,27 @@ WITH RECURSIVE GenresParents(id_genre, id_parent) AS (
 SELECT id_parent
 FROM GenresParents 
 ORDER BY id_parent DESC;
+
+\! echo "Requête 21 : Ne marche pas mais il y a eu une tentative. Cela aurait du être : Pour chaque mois de 2023, les dix groupes dont les concert ont eu le plus de succès ce mois-ci, en termes de nombres d'utilisateurs interessé"
+WITH monthly_interest AS (
+    SELECT 
+        EXTRACT(MONTH FROM c.date_concert) AS month, 
+        g.nom AS group_name, 
+        COUNT(p.id_personne) AS interested_users_count,
+        ROW_NUMBER() OVER (
+            PARTITION BY EXTRACT(MONTH FROM c.date_concert)
+            ORDER BY COUNT(p.id_personne) DESC
+        ) as rn
+    FROM  Concert c 
+    JOIN Lineup l ON c.id_concert = l.id_concert
+    JOIN Artiste a ON l.id_artiste = a.id_artiste
+    JOIN Groupe g ON a.id_groupe = g.id_groupe
+    JOIN Participation p ON c.id_concert = p.id_concert
+    WHERE EXTRACT(YEAR FROM c.date_concert) = 2023 AND p.est_interesse = true
+    GROUP BY month, group_name
+)
+SELECT month, group_name, interested_users_count
+FROM monthly_interest
+WHERE rn <= 10
+ORDER BY month, interested_users_count DESC;
+
